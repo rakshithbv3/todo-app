@@ -1,6 +1,8 @@
 import functions
 import PySimpleGUI as sg
 
+sg.theme("Dark")
+
 label = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip="Enter the todo", key="todo")
 add_button = sg.Button("Add")
@@ -30,22 +32,29 @@ while True:
             window['todos'].update(values=todos)
 
         case "Edit":
-            todo_to_edit = values['todos'][0]
-            new_todo = values['todo']
+            try:
+                todo_to_edit = values['todos'][0]
+                new_todo = values['todo']
 
-            todos = functions.get_todo()
-            index = todos.index(todo_to_edit)
-            todos[index] = new_todo
-            functions.write_todos(todos)
-            window['todos'].update(values=todos)
+                todos = functions.get_todo()
+                index = todos.index(todo_to_edit)
+                todos[index] = new_todo
+                functions.write_todos(todos)
+                window['todos'].update(values=todos)
+            except IndexError:
+                sg.popup("Select an item first", font=('Helvetica', 15))
 
         case "Complete":
-            todo_to_complete = values['todos'][0]
-            todos = functions.get_todo()
-            todos.remove(todo_to_complete)
-            functions.write_todos(todos)
-            window['todos'].update(values=todos)
-            window['todo'].update(value='')
+            try:
+                todo_to_complete = values['todos'][0]
+                todos = functions.get_todo()
+                todos.remove(todo_to_complete)
+                functions.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value='')
+            except IndexError:
+                sg.popup("Select an item first", font=('Helvetica', 15))
+
 
         case ("Exit"):
             break
